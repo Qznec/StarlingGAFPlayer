@@ -74,6 +74,15 @@ package com.catalystapps.gaf.data.tagfx
 		//
 		//--------------------------------------------------------------------------
 
+		public function disposeTexture(): void
+		{
+			if (_texture)
+			{
+				_texture.dispose();
+				_texture = null;
+			}
+		}
+
 		//--------------------------------------------------------------------------
 		//
 		//  PRIVATE METHODS

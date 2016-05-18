@@ -864,7 +864,7 @@ package com.catalystapps.gaf.core
 		private function onSoundLoadIOError(event: IOErrorEvent): void
 		{
 			var sound: Sound = event.target as Sound;
-			this.removeLoaderListeners(event.target as URLLoader, onSoundLoadIOError, onSoundLoadIOError);
+			this.removeLoaderListeners(event.currentTarget as EventDispatcher, onSoundLoadIOError, onSoundLoadIOError);
 			this.zipProcessError(ErrorConstants.ERROR_LOADING + sound.url, 6);
 		}
 

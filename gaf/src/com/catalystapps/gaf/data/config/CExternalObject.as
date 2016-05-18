@@ -1,11 +1,11 @@
+/**
+ * Created by Nazar on 07.04.2016.
+ */
 package com.catalystapps.gaf.data.config
 {
 	import flash.geom.Point;
 
-	/**
-	 * @private
-	 */
-	public class CAnimationObject
+	public class CExternalObject
 	{
 		//--------------------------------------------------------------------------
 		//
@@ -13,35 +13,24 @@ package com.catalystapps.gaf.data.config
 		//
 		//--------------------------------------------------------------------------
 
-		public static const TYPE_TEXTURE: String = "texture";
-		public static const TYPE_TEXTFIELD: String = "textField";
-		public static const TYPE_TIMELINE: String = "timeline";
-		public static const TYPE_EXTERNAL: String = "external";
-
 		//--------------------------------------------------------------------------
 		//
 		//  PRIVATE VARIABLES
 		//
 		//--------------------------------------------------------------------------
 
-		private var _instanceID: String;
-		private var _regionID: String;
-		private var _type: String;
-		private var _mask: Boolean;
-		private var _maxSize: Point;
+		private var _id: String;
+		private var _linkage: String;
 
 		//--------------------------------------------------------------------------
 		//
 		//  CONSTRUCTOR
 		//
 		//--------------------------------------------------------------------------
-
-		public function CAnimationObject(instanceID: String, regionID: String, type: String, mask: Boolean)
+		public function CExternalObject(id: String, linkage: String)
 		{
-			this._instanceID = instanceID;
-			this._regionID = regionID;
-			this._type = type;
-			this._mask = mask;
+			_id = id;
+			_linkage = linkage;
 		}
 
 		//--------------------------------------------------------------------------
@@ -74,34 +63,24 @@ package com.catalystapps.gaf.data.config
 		//
 		//--------------------------------------------------------------------------
 
-		public function get instanceID(): String
+		public function get id(): String
 		{
-			return this._instanceID;
+			return _id;
 		}
 
-		public function get regionID(): String
+		public function set id(value: String): void
 		{
-			return this._regionID;
+			_id = value;
 		}
 
-		public function get mask(): Boolean
+		public function get linkage(): String
 		{
-			return this._mask;
+			return _linkage;
 		}
 
-		public function get type(): String
+		public function set linkage(value: String): void
 		{
-			return this._type;
-		}
-
-		public function get maxSize(): Point
-		{
-			return this._maxSize;
-		}
-
-		public function set maxSize(value: Point): void
-		{
-			this._maxSize = value;
+			_linkage = value;
 		}
 	}
 }

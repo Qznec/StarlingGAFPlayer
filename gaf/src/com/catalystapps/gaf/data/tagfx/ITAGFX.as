@@ -20,5 +20,6 @@ package com.catalystapps.gaf.data.tagfx
 		function get sourceType(): String;
 		function get source(): *;
 		function get ready(): Boolean;
+		function disposeTexture(): void;
 	}
 }

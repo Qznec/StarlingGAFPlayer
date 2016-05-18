@@ -137,12 +137,6 @@ package com.catalystapps.gaf.data.config
 			this._height = value;
 		}
 
-		//--------------------------------------------------------------------------
-		//
-		//  STATIC METHODS
-		//
-		//--------------------------------------------------------------------------
-
 		public function get embedFonts(): Boolean
 		{
 			return this._embedFonts;

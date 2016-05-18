@@ -1,6 +1,8 @@
 package com.catalystapps.gaf.data.converters
 {
 	import com.catalystapps.gaf.data.GAF;
+	import com.catalystapps.gaf.data.config.CExternalObject;
+
 	import flash.events.ErrorEvent;
 	import com.catalystapps.gaf.core.gaf_internal;
 	import com.catalystapps.gaf.data.config.CSound;
@@ -65,6 +67,10 @@ package com.catalystapps.gaf.data.converters
 		private static const TAG_DEFINE_TIMELINE: uint = 13; // v4.0
 		private static const TAG_DEFINE_SOUNDS: uint = 14; // v5.0
 		private static const TAG_DEFINE_ATLAS3: uint = 15; // v5.0
+		private static const TAG_DEFINE_ATLAS4: uint = 16; // v6.0
+		private static const TAG_DEFINE_TIMELINE2: uint = 17; // v6.0
+		private static const TAG_DEFINE_EXTERNAL_OBJECTS: uint = 18; // v6.0
+		private static const TAG_DEFINE_ANIMATION_FRAMES3: uint = 19; // v6.0
 
 		//filters
 		private static const FILTER_DROP_SHADOW: uint = 0;
@@ -216,6 +222,7 @@ package com.catalystapps.gaf.data.converters
 				case BinGAFAssetConfigConverter.TAG_DEFINE_ATLAS:
 				case BinGAFAssetConfigConverter.TAG_DEFINE_ATLAS2:
 				case BinGAFAssetConfigConverter.TAG_DEFINE_ATLAS3:
+				case BinGAFAssetConfigConverter.TAG_DEFINE_ATLAS4:
 					readTextureAtlasConfig(tagID);
 					break;
 				case BinGAFAssetConfigConverter.TAG_DEFINE_ANIMATION_MASKS:
@@ -228,6 +235,7 @@ package com.catalystapps.gaf.data.converters
 					break;
 				case BinGAFAssetConfigConverter.TAG_DEFINE_ANIMATION_FRAMES:
 				case BinGAFAssetConfigConverter.TAG_DEFINE_ANIMATION_FRAMES2:
+				case BinGAFAssetConfigConverter.TAG_DEFINE_ANIMATION_FRAMES3:
 					readAnimationFrames(tagID);
 					return;
 				case BinGAFAssetConfigConverter.TAG_DEFINE_NAMED_PARTS:
@@ -238,6 +246,9 @@ package com.catalystapps.gaf.data.converters
 					break;
 				case BinGAFAssetConfigConverter.TAG_DEFINE_TEXT_FIELDS:
 					readTextFields(this._bytes, this._currentTimeline);
+					break;
+				case BinGAFAssetConfigConverter.TAG_DEFINE_EXTERNAL_OBJECTS:
+					readExternalObjects(this._bytes, this._currentTimeline);
 					break;
 				case BinGAFAssetConfigConverter.TAG_DEFINE_SOUNDS:
 					if (!this._ignoreSounds)
@@ -250,7 +261,8 @@ package com.catalystapps.gaf.data.converters
 					}
 					break;
 				case BinGAFAssetConfigConverter.TAG_DEFINE_TIMELINE:
-					this._currentTimeline = readTimeline();
+				case BinGAFAssetConfigConverter.TAG_DEFINE_TIMELINE2:
+					this._currentTimeline = readTimeline(tagID);
 					break;
 				case BinGAFAssetConfigConverter.TAG_END:
 					if (this._isTimeline)
@@ -294,7 +306,7 @@ package com.catalystapps.gaf.data.converters
 			}
 		}
 
-		private function readTimeline(): GAFTimelineConfig
+		private function readTimeline(tagID: int): GAFTimelineConfig
 		{
 			var timelineConfig: GAFTimelineConfig = new GAFTimelineConfig(this._config.versionMajor + "." + _config.versionMinor);
 			timelineConfig.id = this._bytes.readUnsignedInt().toString();
@@ -303,10 +315,24 @@ package com.catalystapps.gaf.data.converters
 			timelineConfig.bounds = new Rectangle(this._bytes.readFloat(), this._bytes.readFloat(), this._bytes.readFloat(), this._bytes.readFloat());
 			timelineConfig.pivot = new Point(this._bytes.readFloat(), this._bytes.readFloat());
 
-			var hasLinkage: Boolean = this._bytes.readBoolean();
-			if (hasLinkage)
+			if (tagID == BinGAFAssetConfigConverter.TAG_DEFINE_TIMELINE2)
 			{
 				timelineConfig.linkage = this._bytes.readUTF();
+				timelineConfig.baseClass = this._bytes.readUTF();
+				//timelineConfig.originClass = this._bytes.readUTF();
+				var customPropsStr: String = this._bytes.readUTF();
+				if (customPropsStr)
+				{
+					timelineConfig.customProps = JSON.parse(customPropsStr);
+				}
+			}
+			else
+			{
+				var hasLinkage: Boolean = this._bytes.readBoolean();
+				if (hasLinkage)
+				{
+					timelineConfig.linkage = this._bytes.readUTF();
+				}
 			}
 
 			this._config.timelines.push(timelineConfig);
@@ -602,8 +628,23 @@ package com.catalystapps.gaf.data.converters
 								maskID = "";
 							}
 
+							var customProps: Vector.<uint> = null;
+							if (tagID == BinGAFAssetConfigConverter.TAG_DEFINE_ANIMATION_FRAMES3)
+							{
+								var customPropsCount: uint = this._bytes.readUnsignedShort();
+								if (customPropsCount)
+								{
+									customProps = new <uint>[];
+									for (var pi: uint = 0; pi < customPropsCount; ++pi)
+									{
+										customProps[pi] = this._bytes.readUnsignedInt();
+									}
+								}
+							}
+
 							instance = new CAnimationFrameInstance(stateID + "");
 							instance.update(zIndex, matrix, alpha, maskID, filter);
+							//instance.customPropIndices = customProps;
 
 							if (maskID && filter)
 							{
@@ -760,6 +801,8 @@ package com.catalystapps.gaf.data.converters
 			var elementAtlasID: uint;
 			var rotation: Boolean;
 			var linkageName: String;
+			var baseClass: String;
+			//var originClass: String;
 
 			for (i = 0; i < elementsLength; i++)
 			{
@@ -777,7 +820,8 @@ package com.catalystapps.gaf.data.converters
 				elementAtlasID = this._bytes.readUnsignedInt();
 
 				if (tagID == BinGAFAssetConfigConverter.TAG_DEFINE_ATLAS2
-				|| tagID == BinGAFAssetConfigConverter.TAG_DEFINE_ATLAS3)
+				|| tagID == BinGAFAssetConfigConverter.TAG_DEFINE_ATLAS3
+				|| tagID == BinGAFAssetConfigConverter.TAG_DEFINE_ATLAS4)
 				{
 					hasScale9Grid = this._bytes.readBoolean();
 					if (hasScale9Grid)
@@ -800,6 +844,15 @@ package com.catalystapps.gaf.data.converters
 					rotation = this._bytes.readBoolean();
 					linkageName = this._bytes.readUTF();
 				}
+				else if (tagID == BinGAFAssetConfigConverter.TAG_DEFINE_ATLAS4)
+				{
+					elementScaleX = this._bytes.readFloat();
+					elementScaleY = this._bytes.readFloat();
+					rotation = this._bytes.readBoolean();
+					linkageName = this._bytes.readUTF();
+					baseClass = this._bytes.readUTF();
+					//originClass = this._bytes.readUTF();
+				}
 
 				if (!elements.getElement(elementAtlasID.toString()))
 				{
@@ -808,6 +861,8 @@ package com.catalystapps.gaf.data.converters
 					element.pivotMatrix = new Matrix(1 / elementScaleX, 0, 0, 1 / elementScaleY, -pivot.x / elementScaleX, -pivot.y / elementScaleY);
 					element.scale9Grid = scale9Grid;
 					element.linkage = linkageName;
+					element.baseClass = baseClass;
+					//element.originClass = originClass;
 					element.rotated = rotation;
 					elements.addElement(element);
 
@@ -1034,6 +1089,9 @@ package com.catalystapps.gaf.data.converters
 				case 2:
 					typeString = CAnimationObject.TYPE_TIMELINE;
 					break;
+				case 3:
+					typeString = CAnimationObject.TYPE_EXTERNAL;
+					break;
 			}
 
 			return typeString;
@@ -1211,6 +1269,22 @@ package com.catalystapps.gaf.data.converters
 				textFieldObject.displayAsPassword = displayAsPassword;
 				textFieldObject.maxChars = maxChars;
 				timelineConfig.textFields.addTextFieldObject(textFieldObject);
+			}
+		}
+
+		private static function readExternalObjects(tagContent: ByteArray, timelineConfig: GAFTimelineConfig): void
+		{
+			var length: int = tagContent.readUnsignedInt();
+			var objectId: int;
+			var linkage: String;
+
+			for (var i: uint = 0; i < length; i++)
+			{
+				objectId = tagContent.readUnsignedInt();
+				linkage = tagContent.readUTF();
+
+				var externalObject: CExternalObject = new CExternalObject(objectId.toString(), linkage);
+				timelineConfig.externalObjects.addExternalObject(externalObject);
 			}
 		}
 

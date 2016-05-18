@@ -1,5 +1,7 @@
 package com.catalystapps.gaf.data
 {
+	import com.catalystapps.gaf.data.config.CExternalObjects;
+
 	import flash.utils.Dictionary;
 	import com.catalystapps.gaf.data.config.CFrameSound;
 	import com.catalystapps.gaf.data.config.CAnimationFrames;
@@ -42,9 +44,12 @@ package com.catalystapps.gaf.data
 		private var _animationObjects: CAnimationObjects;
 		private var _animationSequences: CAnimationSequences;
 		private var _textFields: CTextFieldObjects;
+		private var _externalObjects: CExternalObjects;
 
 		private var _namedParts: Object;
 		private var _linkage: String;
+		private var _baseClass: String;
+		//private var _originClass: String;
 
 		private var _debugRegions: Vector.<GAFDebugInformation>;
 
@@ -54,6 +59,8 @@ package com.catalystapps.gaf.data
 		private var _pivot: Point;
 		private var _sounds: Dictionary;
 		private var _disposed: Boolean;
+
+		private var _customProps: Object;
 
 		//--------------------------------------------------------------------------
 		//
@@ -69,6 +76,7 @@ package com.catalystapps.gaf.data
 			this._animationObjects = new CAnimationObjects();
 			this._animationSequences = new CAnimationSequences();
 			this._textFields = new CTextFieldObjects();
+			this._externalObjects = new CExternalObjects();
 			this._sounds = new Dictionary();
 		}
 
@@ -91,12 +99,13 @@ package com.catalystapps.gaf.data
 			this._animationObjects = null;
 			this._textureAtlas = null;
 			this._textFields = null;
+			this._externalObjects = null;
 			this._namedParts = null;
 			this._warnings = null;
 			this._bounds = null;
 			this._sounds = null;
 			this._pivot = null;
-			
+
 			this._disposed = true;
 		}
 
@@ -228,6 +237,16 @@ package com.catalystapps.gaf.data
 			this._textFields = textFields;
 		}
 
+		public function get externalObjects(): CExternalObjects
+		{
+			return this._externalObjects;
+		}
+
+		public function set externalObjects(externalObjects: CExternalObjects): void
+		{
+			this._externalObjects = externalObjects;
+		}
+
 		public function get allTextureAtlases(): Vector.<CTextureAtlasScale>
 		{
 			return this._allTextureAtlases;
@@ -298,6 +317,26 @@ package com.catalystapps.gaf.data
 			this._linkage = value;
 		}
 
+		public function get baseClass(): String
+		{
+			return _baseClass;
+		}
+
+		public function set baseClass(value: String): void
+		{
+			_baseClass = value;
+		}
+
+		/*public function get originClass(): String
+		{
+			return _originClass;
+		}
+
+		public function set originClass(value: String): void
+		{
+			_originClass = value;
+		}*/
+
 		public function get stageConfig(): CStage
 		{
 			return this._stageConfig;
@@ -340,6 +379,16 @@ package com.catalystapps.gaf.data
 
 		public function get disposed() : Boolean {
 			return _disposed;
+		}
+
+		public function get customProps(): Object
+		{
+			return _customProps;
+		}
+
+		public function set customProps(value: Object): void
+		{
+			_customProps = value;
 		}
 	}
 }

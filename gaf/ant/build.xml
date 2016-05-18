@@ -1,12 +1,13 @@
 <project name="GAF" basedir="../" default="build">
 
-    <property name="air.sdk.dir" location="d:\AirSDK"/>
-    <property name="flex.sdk.dir" location="d:\FlexSDK"/>
+    <property name="air.sdk.dir" location="F:\AirSDK"/>
+    <property name="flex.sdk.dir" location="F:\FlexSDK"/>
 
     <property name="deploy.dir" location="bin"/>
     <property name="src.dir" location="src"/>
     <property name="lib.dir" location="lib"/>
     <property name="doc.dir" location="doc"/>
+    <property name="siteplayer.lib.dir" location="../../../siteplayer/trunk/lib"/>
 
     <taskdef name="compc" classname="com.adobe.flash.compiler.ant.COMPCTask" classpath="${air.sdk.dir}/ant/lib/flexTasks.jar"/>
     <taskdef name="asdoc" classname="flex.ant.AsDocTask" classpath="${flex.sdk.dir}/ant/lib/flexTasks.jar"/>
@@ -21,6 +22,7 @@
             <external-library-path file="${lib.dir}/feathers.swc"/>
             <external-library-path dir="${air.sdk.dir}/frameworks/libs/player/" includes="*"/>
         </compc>
+        <copy file="${deploy.dir}/gaf.swc" todir="${siteplayer.lib.dir}"/>
     </target>
 
     <target name="doc" depends="clean">

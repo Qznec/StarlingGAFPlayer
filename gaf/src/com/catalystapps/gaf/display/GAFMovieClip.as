@@ -246,7 +246,7 @@ package com.catalystapps.gaf.display
 				var maskInstance: CAnimationFrameInstance = frameConfig.getInstanceByID(id);
 				if (maskInstance)
 				{
-					getTransformMatrix(maskObject as IGAFDisplayObject, HELPER_MATRIX);
+					this.getTransformMatrix(maskObject as IGAFDisplayObject, HELPER_MATRIX);
 					maskInstance.applyTransformMatrix(maskObject.transformationMatrix, HELPER_MATRIX, this._scale);
 					maskObject.invalidateOrientation();
 				}

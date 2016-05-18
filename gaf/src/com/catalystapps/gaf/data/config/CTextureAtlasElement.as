@@ -22,6 +22,8 @@ package com.catalystapps.gaf.data.config
 
 		private var _id: String;
 		private var _linkage: String;
+		private var _baseClass: String;
+		//private var _originClass: String;
 		private var _atlasID: String;
 		private var _region: Rectangle;
 		private var _pivotMatrix: Matrix;
@@ -119,6 +121,26 @@ package com.catalystapps.gaf.data.config
 		{
 			this._linkage = value;
 		}
+
+		public function get baseClass(): String
+		{
+			return this._baseClass;
+		}
+
+		public function set baseClass(value: String): void
+		{
+			this._baseClass = value;
+		}
+
+		/*public function get originClass(): String
+		{
+			return this._originClass;
+		}
+
+		public function set originClass(value: String): void
+		{
+			this._originClass = value;
+		}*/
 
 		public function get rotated():Boolean
 		{

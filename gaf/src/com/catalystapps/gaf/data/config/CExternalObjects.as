@@ -1,11 +1,12 @@
+/**
+ * Created by Nazar on 03.03.14.
+ */
 package com.catalystapps.gaf.data.config
 {
-	import flash.geom.Point;
-
 	/**
 	 * @private
 	 */
-	public class CAnimationObject
+	public class CExternalObjects
 	{
 		//--------------------------------------------------------------------------
 		//
@@ -13,22 +14,13 @@ package com.catalystapps.gaf.data.config
 		//
 		//--------------------------------------------------------------------------
 
-		public static const TYPE_TEXTURE: String = "texture";
-		public static const TYPE_TEXTFIELD: String = "textField";
-		public static const TYPE_TIMELINE: String = "timeline";
-		public static const TYPE_EXTERNAL: String = "external";
-
 		//--------------------------------------------------------------------------
 		//
 		//  PRIVATE VARIABLES
 		//
 		//--------------------------------------------------------------------------
 
-		private var _instanceID: String;
-		private var _regionID: String;
-		private var _type: String;
-		private var _mask: Boolean;
-		private var _maxSize: Point;
+		private var _externalObjectsDictionary: Object;
 
 		//--------------------------------------------------------------------------
 		//
@@ -36,12 +28,9 @@ package com.catalystapps.gaf.data.config
 		//
 		//--------------------------------------------------------------------------
 
-		public function CAnimationObject(instanceID: String, regionID: String, type: String, mask: Boolean)
+		public function CExternalObjects()
 		{
-			this._instanceID = instanceID;
-			this._regionID = regionID;
-			this._type = type;
-			this._mask = mask;
+			_externalObjectsDictionary = {};
 		}
 
 		//--------------------------------------------------------------------------
@@ -49,6 +38,26 @@ package com.catalystapps.gaf.data.config
 		//  PUBLIC METHODS
 		//
 		//--------------------------------------------------------------------------
+
+		public function addExternalObject(externalObject: CExternalObject): void
+		{
+			if (!this._externalObjectsDictionary[externalObject.id])
+			{
+				this._externalObjectsDictionary[externalObject.id] = externalObject;
+			}
+		}
+
+		public function getExternalObject(id: String): CExternalObject
+		{
+			if (this._externalObjectsDictionary[id])
+			{
+				return this._externalObjectsDictionary[id];
+			}
+			else
+			{
+				return null;
+			}
+		}
 
 		//--------------------------------------------------------------------------
 		//
@@ -74,34 +83,16 @@ package com.catalystapps.gaf.data.config
 		//
 		//--------------------------------------------------------------------------
 
-		public function get instanceID(): String
+		public function get externalObjectsDictionary(): Object
 		{
-			return this._instanceID;
+			return this._externalObjectsDictionary;
 		}
 
-		public function get regionID(): String
-		{
-			return this._regionID;
-		}
+		//--------------------------------------------------------------------------
+		//
+		//  STATIC METHODS
+		//
+		//--------------------------------------------------------------------------
 
-		public function get mask(): Boolean
-		{
-			return this._mask;
-		}
-
-		public function get type(): String
-		{
-			return this._type;
-		}
-
-		public function get maxSize(): Point
-		{
-			return this._maxSize;
-		}
-
-		public function set maxSize(value: Point): void
-		{
-			this._maxSize = value;
-		}
 	}
 }

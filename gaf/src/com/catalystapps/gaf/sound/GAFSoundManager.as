@@ -4,6 +4,7 @@ package com.catalystapps.gaf.sound
 
 	import flash.events.Event;
 	import flash.media.Sound;
+	import flash.media.SoundChannel;
 	import flash.media.SoundTransform;
 
 	/**
@@ -48,7 +49,9 @@ package com.catalystapps.gaf.sound
 					channels = soundChannels[swfName][soundID];
 					for (var i: int = 0; i < channels.length; i++)
 					{
-						channels[i].soundChannel.soundTransform = new SoundTransform(volume);
+						var sc: SoundChannel = channels[i].soundChannel;
+						if (sc)
+							channels[i].soundChannel.soundTransform = new SoundTransform(volume);
 					}
 				}
 			}

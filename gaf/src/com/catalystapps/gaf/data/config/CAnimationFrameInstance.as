@@ -23,6 +23,7 @@ package com.catalystapps.gaf.data.config
 		private var _alpha: Number;
 		private var _maskID: String;
 		private var _filter: CFilter;
+		private var _customPropIndices: Vector.<uint>;
 
 		private static var tx: Number, ty: Number;
 
@@ -146,6 +147,16 @@ package com.catalystapps.gaf.data.config
 		public function get zIndex(): uint
 		{
 			return this._zIndex;
+		}
+
+		public function get customPropIndices(): Vector.<uint>
+		{
+			return _customPropIndices;
+		}
+
+		public function set customPropIndices(value: Vector.<uint>): void
+		{
+			_customPropIndices = value;
 		}
 	}
 }

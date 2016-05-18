@@ -22,7 +22,8 @@ package com.catalystapps.gaf.sound
 
 		public function stop(): void
 		{
-			this._soundChannel.stop();
+			if (this._soundChannel)
+				this._soundChannel.stop();
 		}
 
 		public function get soundChannel(): SoundChannel
@@ -36,8 +37,12 @@ package com.catalystapps.gaf.sound
 			{
 				this._soundChannel.removeEventListener(Event.SOUND_COMPLETE, onComplete);
 			}
-			this._soundChannel = soundChannel;
-			this._soundChannel.addEventListener(Event.SOUND_COMPLETE, onComplete);
+
+			if (soundChannel)
+			{
+				this._soundChannel = soundChannel;
+				this._soundChannel.addEventListener(Event.SOUND_COMPLETE, onComplete);
+			}
 		}
 
 		private function onComplete(event: Event): void

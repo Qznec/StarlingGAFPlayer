@@ -47,7 +47,7 @@ package com.catalystapps.gaf.data.config
 			}
 		}
 
-		public function getAnimationObject(id: String): CAnimationObject
+		public function getTextFieldObject(id: String): CTextFieldObject
 		{
 			if (this._textFieldObjectsDictionary[id])
 			{

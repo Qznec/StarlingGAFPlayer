@@ -1,10 +1,13 @@
 package com.catalystapps.gaf.data
 {
 	import com.catalystapps.gaf.data.tagfx.ITAGFX;
+	import com.catalystapps.gaf.data.tagfx.ITAGFX;
 	import com.catalystapps.gaf.data.tagfx.TAGFXBase;
 	import com.catalystapps.gaf.utils.DebugUtility;
+	import com.terrynoya.image.PNG.PNGDecoder;
 
 	import flash.display.BitmapData;
+	import flash.display.PNGEncoderOptions;
 	import flash.display3D.Context3DTextureFormat;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -236,7 +239,9 @@ package com.catalystapps.gaf.data
 				{
 					if (imageID)
 					{
-						(this._texturesDictionary[scale][csf][imageID] as Texture).dispose();
+						var taGFX: ITAGFX = getTAGFX(scale, csf, imageID);
+						taGFX.disposeTexture();
+						//(this._texturesDictionary[scale][csf][imageID] as Texture).dispose();
 
 						delete this._texturesDictionary[scale][csf][imageID];
 					}
@@ -263,12 +268,19 @@ package com.catalystapps.gaf.data
 
 		private function addTexture(dictionary: Object, tagfx: ITAGFX, imageID: String): void
 		{
-			if (DebugUtility.RENDERING_DEBUG)
+			if (DebugUtility.RENDERING_DEBUG
+			&& (tagfx.sourceType == TAGFXBase.SOURCE_TYPE_BITMAP_DATA
+					|| tagfx.sourceType == TAGFXBase.SOURCE_TYPE_PNG_BA))
 			{
 				var bitmapData: BitmapData;
 				if (tagfx.sourceType == TAGFXBase.SOURCE_TYPE_BITMAP_DATA)
 				{
 					bitmapData = setGrayScale(tagfx.source.clone());
+				}
+				else if (tagfx.sourceType == TAGFXBase.SOURCE_TYPE_PNG_BA)
+				{
+					tagfx.source.position = 0;
+					bitmapData = new PNGDecoder().decode(tagfx.source);
 				}
 
 				dictionary[imageID] = Texture.fromBitmapData(bitmapData, GAF.useMipMaps, false, tagfx.textureScale, tagfx.textureFormat);
