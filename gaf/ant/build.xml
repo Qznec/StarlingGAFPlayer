@@ -7,7 +7,7 @@
     <property name="src.dir" location="src"/>
     <property name="lib.dir" location="lib"/>
     <property name="doc.dir" location="doc"/>
-    <property name="siteplayer.lib.dir" location="../../../siteplayer/trunk/lib"/>
+    <property name="siteplayer.lib.dir" location="../../../siteplayer/lib"/>
 
     <taskdef name="compc" classname="com.adobe.flash.compiler.ant.COMPCTask" classpath="${air.sdk.dir}/ant/lib/flexTasks.jar"/>
     <taskdef name="asdoc" classname="flex.ant.AsDocTask" classpath="${flex.sdk.dir}/ant/lib/flexTasks.jar"/>
