@@ -68,9 +68,10 @@ package com.catalystapps.gaf.data.converters
 		private static const TAG_DEFINE_SOUNDS: uint = 14; // v5.0
 		private static const TAG_DEFINE_ATLAS3: uint = 15; // v5.0
 		private static const TAG_DEFINE_ATLAS4: uint = 16; // v6.0
-		private static const TAG_DEFINE_TIMELINE2: uint = 17; // v6.0
+		private static const TAG_DEFINE_TIMELINE2: uint = 17; // deprecated
 		private static const TAG_DEFINE_EXTERNAL_OBJECTS: uint = 18; // v6.0
 		private static const TAG_DEFINE_ANIMATION_FRAMES3: uint = 19; // v6.0
+		private static const TAG_DEFINE_TIMELINE3: uint = 20; // v6.0
 
 		//filters
 		private static const FILTER_DROP_SHADOW: uint = 0;
@@ -262,6 +263,7 @@ package com.catalystapps.gaf.data.converters
 					break;
 				case BinGAFAssetConfigConverter.TAG_DEFINE_TIMELINE:
 				case BinGAFAssetConfigConverter.TAG_DEFINE_TIMELINE2:
+				case BinGAFAssetConfigConverter.TAG_DEFINE_TIMELINE3:
 					this._currentTimeline = readTimeline(tagID);
 					break;
 				case BinGAFAssetConfigConverter.TAG_END:
@@ -315,16 +317,21 @@ package com.catalystapps.gaf.data.converters
 			timelineConfig.bounds = new Rectangle(this._bytes.readFloat(), this._bytes.readFloat(), this._bytes.readFloat(), this._bytes.readFloat());
 			timelineConfig.pivot = new Point(this._bytes.readFloat(), this._bytes.readFloat());
 
-			if (tagID == BinGAFAssetConfigConverter.TAG_DEFINE_TIMELINE2)
+			if (tagID == BinGAFAssetConfigConverter.TAG_DEFINE_TIMELINE2
+				|| tagID == BinGAFAssetConfigConverter.TAG_DEFINE_TIMELINE3)
 			{
 				timelineConfig.linkage = this._bytes.readUTF();
 				timelineConfig.baseClass = this._bytes.readUTF();
 				//timelineConfig.originClass = this._bytes.readUTF();
-				var customPropsStr: String = this._bytes.readUTF();
-				if (customPropsStr)
+				if (tagID == BinGAFAssetConfigConverter.TAG_DEFINE_TIMELINE3)
 				{
-					timelineConfig.customProps = JSON.parse(customPropsStr);
+					var customPropsStr: String = this._bytes.readUTF();
+					if (customPropsStr)
+					{
+						timelineConfig.customProps = JSON.parse(customPropsStr);
+					}
 				}
+
 			}
 			else
 			{
